@@ -12,6 +12,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { pixelNormalize } from "../components/Normalise";
 import { MaterialIcons } from "@expo/vector-icons";
 import Amenities from "../components/Amenities";
+const url = 'http://192.168.1.138:81/api/images/roomimg/';
 
 const PropertyInfoScreen = () => {
   const route = useRoute();
@@ -34,7 +35,9 @@ const PropertyInfoScreen = () => {
     });
   }, []);
   const difference = route.params.oldPrice - route.params.newPrice;
-  const offerPrice = (Math.abs(difference) / route.params.oldPrice) * 100;
+  const offerPrice = route.params.discount;
+  const oldPrice = route.params.oldPrice * route.params.adults;
+  const newPrice = route.params.newPrice * route.params.adults;
   return (
     <>
       <SafeAreaView>
@@ -42,7 +45,7 @@ const PropertyInfoScreen = () => {
           <Pressable
             style={{ flexDirection: "row", flexWrap: "wrap", margin: 10 }}
           >
-            {route.params.photos.slice(0, 5).map((photo) => (
+           
               <View style={{ margin: 6 }}>
                 <Image
                   style={{
@@ -50,15 +53,15 @@ const PropertyInfoScreen = () => {
                     height: pixelNormalize(80),
                     borderRadius: pixelNormalize(4),
                   }}
-                  source={{ uri: photo.image }}
+                  source={{ uri: `${url}${route.params.photos}`  }}
                 />
               </View>
-            ))}
+           
             <Pressable
               style={{ alignItems: "center", justifyContent: "center" }}
             >
               <Text style={{ textAlign: "center", marginLeft: 20 }}>
-                Show More
+             Show More
               </Text>
             </Pressable>
           </Pressable>
@@ -74,7 +77,7 @@ const PropertyInfoScreen = () => {
           >
             <View>
               <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                {route.params.name}
+               Phòng {route.params.name}
               </Text>
               <View
                 style={{
@@ -85,7 +88,7 @@ const PropertyInfoScreen = () => {
                 }}
               >
                 <MaterialIcons name="stars" size={24} color="green" />
-                <Text>{route.params.rating}</Text>
+                <Text>5</Text>
                 <View
                   style={{
                     backgroundColor: "#003580",
@@ -101,7 +104,7 @@ const PropertyInfoScreen = () => {
                       fontSize: 15,
                     }}
                   >
-                    Genius Level
+                   {route.params.name}
                   </Text>
                 </View>
               </View>
@@ -116,7 +119,7 @@ const PropertyInfoScreen = () => {
               }}
             >
               <Text style={{ color: "white", fontSize: 13 }}>
-                Travel sustainable
+              Du lịch 
               </Text>
             </View>
           </View>
@@ -137,7 +140,7 @@ const PropertyInfoScreen = () => {
               marginHorizontal: 12,
             }}
           >
-            Price for 1 Night and {route.params.adults} adults
+           Giá cho 1 đêm trên {route.params.adults} người
           </Text>
           <View
             style={{
@@ -155,10 +158,10 @@ const PropertyInfoScreen = () => {
                 textDecorationLine: "line-through",
               }}
             >
-              {route.params.oldPrice * route.params.adults}
+           Giá cũ:{route.params.oldPrice * route.params.adults}
             </Text>
             <Text style={{ fontSize: 20 }}>
-              Rs {route.params.newPrice * route.params.adults}
+              Giá mới: {route.params.newPrice * route.params.adults}
             </Text>
           </View>
           <View
@@ -173,7 +176,7 @@ const PropertyInfoScreen = () => {
             }}
           >
             <Text style={{ textAlign: "center", color: "white" }}>
-              {offerPrice.toFixed(0)} % OFF
+              Giảm {offerPrice} %
             </Text>
           </View>
 
@@ -221,13 +224,13 @@ const PropertyInfoScreen = () => {
           </View>
           <View style={{ margin: 12 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
-              Rooms and Guests
+            Phòng và Khách
             </Text>
             <Text
               style={{ fontSize: 16, fontWeight: "bold", color: "#007FFF" }}
             >
-              {route.params.rooms} rooms {route.params.adults} adults{" "}
-              {route.params.children} children
+            Phòng {route.params.rooms} người lớn {route.params.adults} {" "}
+             trẻ em  {route.params.children} 
             </Text>
           </View>
 
@@ -255,12 +258,13 @@ const PropertyInfoScreen = () => {
       <Pressable
       onPress={() => navigation.navigate("Rooms",{
         rooms:route.params.availableRooms,
-        oldPrice:route.params.oldPrice,
-        newPrice:route.params.newPrice,
+        oldPrice:oldPrice,
+        newPrice:newPrice,
         name:route.params.name,
         children:route.params.children,
         adults:route.params.adults,
         rating:route.params.rating,
+        email:route.params.email,
         startDate:route.params.selectedDates.startDate,
         endDate:route.params.selectedDates.endDate
       })}

@@ -35,7 +35,7 @@ const Amenities = () => {
   return (
     <View style={{ padding: 10 }}>
       <Text style={{ fontSize: 17, fontWeight: "600" }}>
-        Most Popular Facilities
+      Tiện ích được ưa chuộng nhất
       </Text>
       <View
         style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap" }}

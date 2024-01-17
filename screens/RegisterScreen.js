@@ -6,15 +6,17 @@ import { auth, db } from '../firebase';
 import { setDoc,doc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import register from './api/register';
 
 
 const RegisterScreen = () => {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
-    const [phone,setPhone] = useState("");
+    const [name,setName] = useState("");
     const navigation = useNavigation();
-    const register = () => {
-        if(email === "" || password === "" || phone === "" ){
+    
+    const registers = () => {
+        if(email === "" || password === "" || name === "" ){
             Alert.alert(
                 "Invalid Detials",
                 "Please enter all the credentials",
@@ -28,17 +30,43 @@ const RegisterScreen = () => {
                 ],
                 { cancelable: false }
               );
+              
         }
-        createUserWithEmailAndPassword(auth,email,password).then((userCredentials) => {
-           
-            const user = userCredentials._tokenResponse.email;
-            const uid = auth.currentUser.uid;
-
-             setDoc(doc(db,"users",`${uid}`),{
-                 email:user,
-                 phone:phone
-             })
+        else {
+        register(email, name, password)
+        .then(response => {
+          console.log(response.data);
+          Alert.alert(
+            "Thông báo",
+            "Đăng kí thành công!",
+            [
+              {
+                text: "OK",
+                onPress: () => navigation.goBack(),
+                style: "ok"
+              },
+             
+            ],
+            { cancelable: false }
+          );
         })
+        .catch(error => {
+          Alert.alert(
+            "Thông báo",
+            "tại khoản đã tồn tại!",
+            [
+              {
+                text: "OK",
+                onPress: () =>console.log("OK Pressed"),
+                style: "ok"
+              },
+             
+            ],
+            { cancelable: false }
+          );
+          console.error('Error fetching hotels:', error);
+        });
+      }
     }
   return (
     <SafeAreaView  style={{
@@ -112,8 +140,8 @@ const RegisterScreen = () => {
             </Text>
 
             <TextInput
-              value={phone}
-              onChangeText={(text) => setPhone(text)}
+              value={name}
+              onChangeText={(text) => setName(text)}
               placeholder="enter your Phone No"
               placeholderTextColor={"black"}
               style={{
@@ -128,7 +156,7 @@ const RegisterScreen = () => {
         </View>
 
         <Pressable
-        onPress={register}
+        onPress={registers}
           style={{
             width: 200,
             backgroundColor: "#003580",

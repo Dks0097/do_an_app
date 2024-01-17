@@ -19,16 +19,21 @@ import UserScreen from "./screens/UserScreen";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import { useRoute } from "@react-navigation/native";
+
 const StackNavigator = () => {
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
-
   function BottomTabs() {
+    const route = useRoute();
+  const email = route.params.email;
+
     return (
       <Tab.Navigator>
         <Tab.Screen
           name="Home"
           component={HomeScreen}
+          initialParams={{ email: email }} // Truyền email vào đây
           options={{
             tabBarLabel: "Home",
             headerShown: false,
@@ -59,6 +64,7 @@ const StackNavigator = () => {
         <Tab.Screen
           name="Bookings"
           component={BookingScreen}
+          initialParams={{ email: email }}
           options={{
             tabBarLabel: "Bookings",
             headerShown: false,
@@ -74,6 +80,7 @@ const StackNavigator = () => {
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}
+          initialParams={{ email: email }}
           options={{
             tabBarLabel: "Profile",
             headerShown: false,

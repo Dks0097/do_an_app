@@ -28,10 +28,10 @@ const RoomsScreen = () => {
   return (
     <>
       <ScrollView>
-        {route.params.rooms.map((item, index) => (
+        
           <Pressable
             style={{ margin: 10, backgroundColor: "white", padding: 10 }}
-            key={index}
+           
           >
             <View
               style={{
@@ -43,15 +43,15 @@ const RoomsScreen = () => {
               <Text
                 style={{ color: "#007FFF", fontSize: 17, fontWeight: "500" }}
               >
-                {item.name}
+                {route.params.name}
               </Text>
               <AntDesign name="infocirlceo" size={24} color="#007FFF" />
             </View>
             <Text style={{ marginTop: 3, fontSize: 16 }}>
-              pay at the property
+            Thanh toán tại chỗ ở
             </Text>
             <Text style={{ marginTop: 3, color: "green", fontSize: 16 }}>
-              Free cancellation Available
+             Có thể hủy miễn phí 
             </Text>
             <View
               style={{
@@ -68,13 +68,13 @@ const RoomsScreen = () => {
                   textDecorationLine: "line-through",
                 }}
               >
-                {route.params.oldPrice}
+               Giá cũ: {route.params.oldPrice}
               </Text>
-              <Text style={{ fontSize: 18 }}>Rs{route.params.newPrice}</Text>
+              <Text style={{ fontSize: 18 }}>Giá mới: {route.params.newPrice}</Text>
             </View>
             <Amenities />
 
-            {selected.includes(item.name) ? (
+            {selected.includes(route.params.name) ? (
               <Pressable
                 style={{
                   borderColor: "#318CE7",
@@ -108,7 +108,7 @@ const RoomsScreen = () => {
               </Pressable>
             ) : (
               <Pressable
-                onPress={() => setSelected(item.name)}
+                onPress={() => setSelected(route.params.name)}
                 style={{
                   borderColor: "#007FFF",
                   borderWidth: 2,
@@ -129,7 +129,7 @@ const RoomsScreen = () => {
               </Pressable>
             )}
           </Pressable>
-        ))}
+       
       </ScrollView>
 
       {selected.length > 0 ? (
@@ -139,9 +139,11 @@ const RoomsScreen = () => {
               oldPrice: route.params.oldPrice,
               newPrice: route.params.newPrice,
               name: route.params.name,
+              rooms:route.params.rooms,
               children: route.params.children,
               adults: route.params.adults,
               rating: route.params.rating,
+              email: route.params.email,
               startDate: route.params.startDate,
               endDate: route.params.endDate,
             })

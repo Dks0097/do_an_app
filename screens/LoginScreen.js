@@ -6,12 +6,16 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import signIn from './api/signIn';
 
+
+import saveToken from './api/saveToken';
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,14 +42,68 @@ const LoginScreen = () => {
 //     getMyObject();
 //   }, [token]);
 
- const login = () => {
-     signInWithEmailAndPassword(auth,email,password).then((userCredential) => {
-        console.log("user credential", userCredential);
-        const user = userCredential.user;
-        console.log("user details", user);
-     })
- }
-
+//  const login = () => {
+//      signInWithEmailAndPassword(auth,email,password).then((userCredential) => {
+//         console.log("user credential", userCredential);
+//         const user = userCredential.user;
+//         console.log("user details", user);
+//      })
+//  }
+const login = () => {
+  if(email === "" || password === "" ){
+    Alert.alert(
+        "Thông báo",
+        "Vui lòng nhập tài khoản hoặc mật khẩu!",
+        [
+          {
+            text: "Cancel",
+            onPress: () => navigation.replace("Main"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+      );
+      
+}
+else {
+  signIn(email, password)
+  .then(response => {
+    saveToken(response.token);
+    console.log(response.data);
+    
+    Alert.alert(
+      "Thông báo",
+      "Đăng nhập thành công!",
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Main",{email:email}),
+          style: "ok"
+        },
+       
+      ],
+      { cancelable: false }
+    );
+  })
+  .catch(error => {
+    Alert.alert(
+      "Thông báo",
+      "Sai tài khoản hoặc mật khẩu!",
+      [
+        {
+          text: "OK",
+          onPress: () =>console.log("OK Pressed"),
+          style: "ok"
+        },
+       
+      ],
+      { cancelable: false }
+    );
+    console.error('Error fetching hotels:', error);
+  });
+}
+}
   useEffect(() => {
     try {
       const unsubscribe = auth.onAuthStateChanged((authUser) => {

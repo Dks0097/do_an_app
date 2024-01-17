@@ -34,10 +34,10 @@ const UserScreen = () => {
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const finalStep = () => {
-    if (!firstName || !lastName || !email || !phoneNo) {
+    if (!firstName || !lastName || !phoneNo) {
       Alert.alert(
-        "Invalide Details",
-        "Please ente all the fields",
+        "Thông báo!",
+        "Vui lòng nhập đủ thông tin!",
         [
           {
             text: "Cancel",
@@ -49,11 +49,15 @@ const UserScreen = () => {
         { cancelable: false }
       );
     }
-    if (firstName && lastName && email && phoneNo) {
+    if (firstName && lastName  && phoneNo) {
       navigation.navigate("Confirmation", {
+        rooms:route.params.rooms,
         oldPrice: route.params.oldPrice,
         newPrice: route.params.newPrice,
         name: route.params.name,
+        firstName:firstName,
+        email:route.params.email,
+        phone: phoneNo,
         children: route.params.children,
         adults: route.params.adults,
         rating: route.params.rating,
@@ -86,7 +90,7 @@ const UserScreen = () => {
         <View style={{ flexDirection: "column", gap: 10, marginTop: 10 }}>
           <Text>Email</Text>
           <TextInput
-            value={email}
+            value={route.params.email}
             onChangeText={(text) => setEmail(text)}
             style={{ padding: 10, borderColor: "gray", borderWidth: 1 }}
           />
@@ -130,14 +134,14 @@ const UserScreen = () => {
                 textDecorationLine: "line-through",
               }}
             >
-              {route.params.oldPrice * route.params.adults}
+             Giá {route.params.oldPrice }
             </Text>
             <Text style={{ fontSize: 20 }}>
-              Rs {route.params.newPrice * route.params.adults}
+              Giá mới {route.params.newPrice }
             </Text>
           </View>
           <Text>
-            You Saved {route.params.oldPrice - route.params.newPrice} rupees
+            Bạn trả {route.params.newPrice} vnđ
           </Text>
         </View>
         <Pressable

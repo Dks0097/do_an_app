@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View ,Alert} from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -6,10 +6,22 @@ import { useDispatch } from "react-redux";
 import { savedPlaces } from "../SavedReducer";
 import { setDoc,doc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import booking from './api/booking';
 
 const ConfirmationScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  
+  const email = route.params.email;
+  const name = route.params.firstName;
+  const check_in = route.params.startDate;
+  const check_out = route.params.endDate;
+  const actual_price = route.params.oldPrice;
+  const subtotal = route.params.newPrice;
+  const phone = route.params.phone;
+  const rooms_id = route.params.rooms;
+  const discount = route.params.oldPrice - route.params.newPrice;
+ 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -27,23 +39,34 @@ const ConfirmationScreen = () => {
       },
     });
   }, []);
-  const dispatch = useDispatch();
-  const uid = auth.currentUser.uid
-  const confirmBooking = async () => {
-    dispatch(savedPlaces(route.params));
-
-    await setDoc(
-      doc(db, "users", `${uid}`),
-      {
-        bookingDetails: { ...route.params },
-      },
-      {
-        merge: true,
-      }
-    );
-
-    navigation.navigate("Main");
+  const confirmBooking = () => {
+   
+    booking(rooms_id,email, name, check_in,check_out,actual_price,subtotal,phone,discount)
+    .then(response => {
+      
+      console.log(response.data);
+      Alert.alert(
+        "Thông báo",
+        "Đặt phòng thành công!",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Main",{email:email})
+            ,
+            style: "ok"
+          },
+         
+        ],
+        { cancelable: false }
+      );
+      
+    })
+    .catch(error => {
+      
+      console.error('Error fetching hotels:', error);
+    });
   }
+ 
   return (
     <View>
       <Pressable style={{ backgroundColor: "white", margin: 10 }}>

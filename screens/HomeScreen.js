@@ -71,8 +71,8 @@ const HomeScreen = () => {
   };
   console.log(route.params);
 
-  const searchPlaces = (place) => {
-    if(!route.params || !selectedDates){
+  const searchPlaces = (name) => {
+    if(!route.params.input || !selectedDates){
       Alert.alert(
         "Invalid Details",
         "Please enter all the details",
@@ -94,7 +94,9 @@ const HomeScreen = () => {
         adults:adults,
         children:children,
         selectedDates:selectedDates,
-        place:place
+        name:name,
+        email:route.params.email,
+
       })
     }
   };
@@ -231,7 +233,7 @@ const HomeScreen = () => {
           <Text
             style={{ marginHorizontal: 20, fontSize: 17, fontWeight: "500" }}
           >
-            Travel More spend less
+            Travel More spend less 
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <Pressable
